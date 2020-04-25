@@ -38,6 +38,7 @@ import optparse
 import socket
 import sys
 import re
+import logging
 from builtins import object
 from builtins import *
 standard_library.install_aliases()
@@ -158,8 +159,6 @@ class NICClient(object):
     DVAG_HOST = "whois.nic.dvag"
     EE_HOST = "whois.tld.ee"
     EU_HOST = "whois.eu"
-    EU.LV_HOST = "whois.biz"
-    EU.ORG_HOST = "whois.eu.org"
     EUROVISION_HOST = "whois.nic.eurovision"
     EUS_HOST = "whois.nic.eus"
     FAITH_HOST = "whois.nic.faith"
@@ -224,7 +223,6 @@ class NICClient(object):
     LU_HOST = "whois.dns.lu"
     LUXE_HOST = "whois.nic.luxe"
     LUXURY_HOST = "whois.nic.luxury"
-    LY_HOST = "['https://www.nic.ly/whois.php', 'POST', 'domain={domain_notld}&Submit=Search']"
     MA_HOST = "whois.iam.net.ma"
     MADRID_HOST = "whois.madrid.rs.corenic.net"
     MANGO_HOST = "whois.nic.mango"
@@ -306,7 +304,6 @@ class NICClient(object):
     TK_HOST = "whois.dot.tk"
     TL_HOST = "whois.nic.tl"
     TM_HOST = "whois.nic.tm"
-    TO_HOST = "https://www.tonic.to/whois?domain="
     TOP_HOST = "whois.nic.top"
     TR_HOST = "whois.nic.tr"
     TRADE_HOST = "whois.nic.trade"
@@ -314,8 +311,6 @@ class NICClient(object):
     TRUST_HOST = "whois.nic.trust"
     TUI_HOST = "whois.nic.tui"
     TV_HOST = "tvwhois.verisign-grs.com"
-    BIZ.UA_HOST = "whois.biz.ua"
-    CO.UA_HOST = "whois.co.ua"
     UNO_HOST = "whois.nic.uno"
     US_HOST = "whois.nic.us"
     UZ_HOST = "whois.cctld.uz"
@@ -339,12 +334,7 @@ class NICClient(object):
     XXX_HOST = "whois.nic.xxx"
     YOGA_HOST = "whois.nic.yoga"
     YT_HOST = "whois.nic.yt"
-    CO.ZA_HOST = "whois.registry.net.za"
-    NET.ZA_HOST = "net-whois.registry.net.za"
-    ORG.ZA_HOST = "org-whois.registry.net.za"
-    WEB.ZA_HOST = "web-whois.registry.net.za"
     ZM_HOST = "whois.nic.zm"
-
 
 
     WHOIS_RECURSE = 0x01
@@ -437,7 +427,7 @@ class NICClient(object):
             if nhost is not None:
                 response += self.whois(query, nhost, 0)
         except socket.error as exc: # 'response' is assigned a value (also a str) even on socket timeout
-            print("Error trying to connect to socket: closing socket") 
+            logging.debug("Error trying to connect to socket: closing socket") 
             s.close()
             response = "Socket not responding"   
         return response
@@ -647,10 +637,6 @@ class NICClient(object):
             return NICClient.EE_HOST
         elif tld == 'eu':
             return NICClient.EU_HOST
-        elif tld == 'eu.lv':
-            return NICClient.EU.LV_HOST
-        elif tld == 'eu.org':
-            return NICClient.EU.ORG_HOST
         elif tld == 'eurovision':
             return NICClient.EUROVISION_HOST
         elif tld == 'eus':
@@ -779,8 +765,6 @@ class NICClient(object):
             return NICClient.LUXE_HOST
         elif tld == 'luxury':
             return NICClient.LUXURY_HOST
-        elif tld == 'ly':
-            return NICClient.LY_HOST
         elif tld == 'ma':
             return NICClient.MA_HOST
         elif tld == 'madrid':
@@ -943,8 +927,6 @@ class NICClient(object):
             return NICClient.TL_HOST
         elif tld == 'tm':
             return NICClient.TM_HOST
-        elif tld == 'to':
-            return NICClient.TO_HOST
         elif tld == 'top':
             return NICClient.TOP_HOST
         elif tld == 'tr':
@@ -959,8 +941,6 @@ class NICClient(object):
             return NICClient.TUI_HOST
         elif tld == 'tv':
             return NICClient.TV_HOST
-        elif tld == 'biz.ua':
-            return NICClient.BIZ.UA_HOST
         elif tld == 'co.ua':
             return NICClient.CO.UA_HOST
         elif tld == 'uno':
@@ -1009,14 +989,6 @@ class NICClient(object):
             return NICClient.YOGA_HOST
         elif tld == 'yt':
             return NICClient.YT_HOST
-        elif tld == 'co.za':
-            return NICClient.CO.ZA_HOST
-        elif tld == 'net.za':
-            return NICClient.NET.ZA_HOST
-        elif tld == 'org.za':
-            return NICClient.ORG.ZA_HOST
-        elif tld == 'web.za':
-            return NICClient.WEB.ZA_HOST
         elif tld == 'zm':
             return NICClient.ZM_HOST
         else:
